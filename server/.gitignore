@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+# Optional npm cache directory
+.npm
+# Optional REPL history
+.node_repl_history
+
+# Environment variables
+.env
+# Alternative common file names for environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.config.yml # Example of a config file that might contain sensitive credentials
+
+# Build artifacts and compiled code
+build/
+dist/
+public/build
+# Client-side build artifacts (e.g., if using create-react-app or similar)
+client/build
+client/dist
+# Other common build outputs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+coverage/ # Test coverage reports
+
+# IDE and OS-specific files
+.idea/ # Common for WebStorm, IntelliJ, etc.
+.vscode/ # VS Code settings (optional, some prefer to share certain settings)
+.DS_Store # macOS specific files
+Thumbs.db # Windows specific files
+*.suo
+*.user
+*.config.user
+*.FWS
+*.psess
+*.vssscc
+.history
+
+# Testing-related files
+*.tap
+/coverage
