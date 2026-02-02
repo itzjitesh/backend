@@ -23,18 +23,18 @@ app.use(
   cors({
     origin: FRONTEND_URL,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "Accept",
-      "X-Requested-With",
-    ],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
-    optonsSuccessStatus: 200,
   }),
 );
 
-app.options("*", cors({ origin: FRONTEND_URL }));
+// Handle preflight properly
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
 
 /**
  * IMPORTANT:
