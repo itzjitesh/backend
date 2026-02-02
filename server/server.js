@@ -20,22 +20,12 @@ const app = express();
 app.use(
   cors({
     origin: FRONTEND_URL,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "Accept",
-      "X-Requested-With",
-    ],
     credentials: true,
-    optionsSuccessStatus: 200,
   }),
 );
 
 // Handle preflight properly
-app.options("/*", (req, res) => {
-  res.sendStatus(200);
-});
+app.options("*", cors());
 
 /**
  * IMPORTANT:
