@@ -11,15 +11,30 @@ const stripeRoutes = require("./routes/stripe"); // create-checkout-session
 const stripeWebhookHandler = require("./routes/stripeWebhook"); // webhook handler
 // const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // optional if used elsewhere
 
+const FRONTEND_URL =
+  process.env.CLIENT_URL ||
+  "https://frontend-red-kappa-41.vercel.app/" ||
+  "http://localhost:5173";
+
 const app = express();
 
 // CORS: allow your client
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: FRONTEND_URL,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Accept",
+      "X-Requested-With",
+    ],
     credentials: true,
+    optonsSuccessStatus: 200,
   }),
 );
+
+app.options("*", cors({ origin: FRONTEND_URL }));
 
 /**
  * IMPORTANT:
@@ -40,6 +55,20 @@ app.use("/api/auth", authRoutes);
 app.use("/api/calculators", calculatorsRoutes);
 app.use("/api/scenarios", scenariosRoutes);
 app.use("/api/stripe", stripeRoutes); // contains create-checkout-session
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*"); // allow all origins temporarily
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+  );
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+  );
+  if (req.method === "OPTIONS") return res.sendStatus(200);
+  next();
+});
 
 // check
 app.get("/", (req, res) => res.send("ValueLens API"));
