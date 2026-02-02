@@ -21,11 +21,20 @@ app.use(
   cors({
     origin: FRONTEND_URL,
     credentials: true,
-  }),
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Accept", "X-Requested-With"],
+    optionsSuccessStatus: 200,
+  })
 );
 
-// Handle preflight properly
-app.options("*", cors());
+// Simple preflight handler (no route registration with '*' pattern)
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    // CORS middleware already set the correct headers; just return 200
+    return res.sendStatus(200);
+  }
+  next();
+});
 
 /**
  * IMPORTANT:
