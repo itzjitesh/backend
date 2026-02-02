@@ -12,9 +12,7 @@ const stripeWebhookHandler = require("./routes/stripeWebhook"); // webhook handl
 // const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // optional if used elsewhere
 
 const FRONTEND_URL =
-  process.env.CLIENT_URL ||
-  "https://frontend-red-kappa-41.vercel.app/" ||
-  "http://localhost:5173";
+  process.env.CLIENT_URL || "https://frontend-red-kappa-41.vercel.app/";
 
 const app = express();
 
@@ -23,17 +21,20 @@ app.use(
   cors({
     origin: FRONTEND_URL,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Accept",
+      "X-Requested-With",
+    ],
     credentials: true,
+    optionsSuccessStatus: 200,
   }),
 );
 
 // Handle preflight properly
-app.use((req, res, next) => {
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-  next();
+app.options("/*", (req, res) => {
+  res.sendStatus(200);
 });
 
 /**
