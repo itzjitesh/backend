@@ -22,9 +22,14 @@ app.use(
     origin: FRONTEND_URL,
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "Accept", "X-Requested-With"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Accept",
+      "X-Requested-With",
+    ],
     optionsSuccessStatus: 200,
-  })
+  }),
 );
 
 // Simple preflight handler (no route registration with '*' pattern)
@@ -52,6 +57,7 @@ app.use(express.json());
 
 // Mount other routes (including non-webhook stripe routes)
 app.use("/api/auth", authRoutes);
+app.use("/auth", authRoutes);
 app.use("/api/calculators", calculatorsRoutes);
 app.use("/api/scenarios", scenariosRoutes);
 app.use("/api/stripe", stripeRoutes); // contains create-checkout-session
