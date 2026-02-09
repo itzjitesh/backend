@@ -17,29 +17,31 @@ const FRONTEND_URL =
 const app = express();
 
 // CORS: allow your client
-app.use(
-  cors({
-    origin: FRONTEND_URL,
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "Accept",
-      "X-Requested-With",
-    ],
-    optionsSuccessStatus: 200,
-  }),
-);
+// app.use(
+//   cors({
+//     origin: FRONTEND_URL,
+//     credentials: true,
+//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+//     allowedHeaders: [
+//       "Content-Type",
+//       "Authorization",
+//       "Accept",
+//       "X-Requested-With",
+//     ],
+//     optionsSuccessStatus: 200,
+//   }),
+// );
+
+app.use(cors({ origin: FRONTEND_URL }));
 
 // Simple preflight handler (no route registration with '*' pattern)
-app.use((req, res, next) => {
-  if (req.method === "OPTIONS") {
-    // CORS middleware already set the correct headers; just return 200
-    return res.sendStatus(200);
-  }
-  next();
-});
+// app.use((req, res, next) => {
+//   if (req.method === "OPTIONS") {
+//     // CORS middleware already set the correct headers; just return 200
+//     return res.sendStatus(200);
+//   }
+//   next();
+// });
 
 /**
  * IMPORTANT:
@@ -62,19 +64,19 @@ app.use("/api/calculators", calculatorsRoutes);
 app.use("/api/scenarios", scenariosRoutes);
 app.use("/api/stripe", stripeRoutes); // contains create-checkout-session
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*"); // allow all origins temporarily
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-  );
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-  );
-  if (req.method === "OPTIONS") return res.sendStatus(200);
-  next();
-});
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "*"); // allow all origins temporarily
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+//   );
+//   res.header(
+//     "Access-Control-Allow-Methods",
+//     "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+//   );
+//   if (req.method === "OPTIONS") return res.sendStatus(200);
+//   next();
+// });
 
 // check
 app.get("/", (req, res) => res.send("ValueLens API"));
