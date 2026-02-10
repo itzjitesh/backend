@@ -9,45 +9,34 @@ const calculatorsRoutes = require("./routes/calculators");
 const scenariosRoutes = require("./routes/scenarios");
 const stripeRoutes = require("./routes/stripe"); // create-checkout-session
 const stripeWebhookHandler = require("./routes/stripeWebhook"); // webhook handler
-// const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // optional if used elsewhere
 
-const FRONTEND_URL =
-  process.env.CLIENT_URL || "https://frontend-red-kappa-41.vercel.app/";
+// const FRONTEND_URL =
+// process.env.CLIENT_URL || "https://frontend-red-kappa-41.vercel.app/";
 
 const app = express();
 
-// CORS: allow your client
-// app.use(
-//   cors({
-//     origin: FRONTEND_URL,
-//     credentials: true,
-//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-//     allowedHeaders: [
-//       "Content-Type",
-//       "Authorization",
-//       "Accept",
-//       "X-Requested-With",
-//     ],
-//     optionsSuccessStatus: 200,
-//   }),
-// );
+// app.use(cors({ origin: FRONTEND_URL }));
 
-app.use(cors({ origin: FRONTEND_URL }));
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://frontend-red-kappa-41.vercel.app",
+];
 
-// Simple preflight handler (no route registration with '*' pattern)
-// app.use((req, res, next) => {
-//   if (req.method === "OPTIONS") {
-//     // CORS middleware already set the correct headers; just return 200
-//     return res.sendStatus(200);
-//   }
-//   next();
-// });
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS blocked"));
+      }
+    },
+  }),
+);
 
-/**
- * IMPORTANT:
- * Mount the Stripe webhook route with express.raw() BEFORE express.json()
- * so the raw body is available for signature verification.
- */
+app.options("*", cors());
+
 app.post(
   "/api/stripe/webhook",
   express.raw({ type: "application/json" }),
@@ -63,20 +52,6 @@ app.use("/auth", authRoutes);
 app.use("/api/calculators", calculatorsRoutes);
 app.use("/api/scenarios", scenariosRoutes);
 app.use("/api/stripe", stripeRoutes); // contains create-checkout-session
-
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "*"); // allow all origins temporarily
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-//   );
-//   res.header(
-//     "Access-Control-Allow-Methods",
-//     "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-//   );
-//   if (req.method === "OPTIONS") return res.sendStatus(200);
-//   next();
-// });
 
 // check
 app.get("/", (req, res) => res.send("ValueLens API"));
