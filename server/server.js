@@ -50,8 +50,11 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/auth", authRoutes);
 app.use("/api/calculators", calculatorsRoutes);
+app.use("/calculators", calculatorsRoutes);
 app.use("/api/scenarios", scenariosRoutes);
-app.use("/api/stripe", stripeRoutes); // contains create-checkout-session
+app.use("/scenarios", scenariosRoutes);
+app.use("/api/stripe", stripeRoutes); // contains reate-checkout-session
+app.use("/stripe", stripeRoutes);
 
 // check
 app.get("/", (req, res) => res.send("ValueLens API"));
